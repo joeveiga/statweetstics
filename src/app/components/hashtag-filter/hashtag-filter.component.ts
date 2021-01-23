@@ -1,24 +1,30 @@
-import { Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { Observable } from 'rxjs';
-import { Store, select } from '@ngrx/store';
-
-import * as fromStore from '../../store';
 
 @Component({
   selector: 'app-hashtag-filter',
   templateUrl: './hashtag-filter.component.html',
   styleUrls: ['./hashtag-filter.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HashtagFilterComponent {
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-  hashtags$: Observable<string[]>;
+  @Input()
+  hashtags: string[];
 
-  constructor(private store: Store<fromStore.IState>) {
-    this.hashtags$ = store.pipe(select(fromStore.SelectHashtags));
-  }
+  @Output()
+  hashtagAdded: EventEmitter<string> = new EventEmitter();
+
+  @Output()
+  hashtagRemoved: EventEmitter<string> = new EventEmitter();
 
   add(event: MatChipInputEvent): void {
     let value = event.value;
@@ -28,7 +34,7 @@ export class HashtagFilterComponent {
 
     // Add our hashtag
     if ((value || '').trim()) {
-      this.store.dispatch(fromStore.AddHashtag({ hashtag: value.trim() }));
+      this.hashtagAdded.emit(value.trim());
     }
 
     // Reset the input value
@@ -38,6 +44,6 @@ export class HashtagFilterComponent {
   }
 
   remove(hashtag: string): void {
-    this.store.dispatch(fromStore.RemoveHashtag({ hashtag }));
+    this.hashtagRemoved.emit(hashtag);
   }
 }

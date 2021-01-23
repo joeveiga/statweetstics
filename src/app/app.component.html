@@ -1,6 +1,10 @@
 <div fxFlex fxLayout="column">
   <!-- Hashtag filter -->
-  <app-hashtag-filter></app-hashtag-filter>
+  <app-hashtag-filter
+    [hashtags]="hashtags$ | async"
+    (hashtagAdded)="hashtagAdded($event)"
+    (hashtagRemoved)="hashtagRemoved($event)"
+  ></app-hashtag-filter>
   <div fxFlex fxLayout="column" fxLayoutAlign="center">
     <div
       fxLayout="column"

@@ -1,13 +1,14 @@
 <mat-form-field fxFlex appearance="outline" floatLabel="always">
-    <mat-label>#Hashtag(s)</mat-label>
-    <mat-chip-list #hashtagChips aria-label="Hashtag filter">
-        <mat-chip *ngFor="let ht of hashtags$ | async" (removed)="remove(ht)">
-            #{{ ht }}
-            <mat-icon matChipRemove>cancel</mat-icon>
-        </mat-chip>
-        <input [matChipInputFor]="hashtagChips"
-            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-            (matChipInputTokenEnd)="add($event)"
-            >
-    </mat-chip-list>
+  <mat-label>#Hashtag(s)</mat-label>
+  <mat-chip-list #hashtagChips aria-label="Hashtag filter">
+    <mat-chip *ngFor="let ht of hashtags" (removed)="remove(ht)">
+      #{{ ht }}
+      <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip>
+    <input
+      [matChipInputFor]="hashtagChips"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      (matChipInputTokenEnd)="add($event)"
+    />
+  </mat-chip-list>
 </mat-form-field>
