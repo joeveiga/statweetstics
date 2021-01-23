@@ -3,18 +3,26 @@ import { Store, select } from '@ngrx/store';
 import { Actions, ofType, createEffect } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { concatMap, withLatestFrom, map, filter } from 'rxjs/operators';
+
+import { TweetService } from '../services/tweet.service';
+
 import * as fromActions from './app.actions';
 import * as fromSelectors from './app.selectors';
 import { IState } from './app.reducer';
-import { AppService } from '../services/app.service';
 
 @Injectable()
 export class AppEffects {
   constructor(
     private actions$: Actions,
     private store: Store<IState>,
-    private service: AppService
+    private appService: TweetService
   ) {}
+
+  fetchTweets$ = createEffect(() =>
+    this.appService.tweets$.pipe(
+      map((message) => fromActions.FetchTweet({ message }))
+    )
+  );
 
   filterTweets$ = createEffect(() =>
     this.actions$.pipe(
@@ -25,7 +33,7 @@ export class AppEffects {
         )
       ),
       filter(([action, hashtags]) =>
-        this.service.hasHashtags(action.message, hashtags)
+        TweetService.hasHashtags(action.message, hashtags)
       ),
       map(([action, _]) =>
         fromActions.ReceiveTweet({ message: action.message })

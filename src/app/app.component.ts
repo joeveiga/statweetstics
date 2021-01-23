@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { PubNubAngular } from 'pubnub-angular2';
 import { Observable } from 'rxjs';
 import { sampleTime } from 'rxjs/operators';
 
@@ -17,18 +16,7 @@ export class AppComponent {
   perCountry$: Observable<{ name: string; value: number }[]>;
   hashtags$: Observable<string[]>;
 
-  constructor(private store: Store<fromStore.IState>, pubnub: PubNubAngular) {
-    // init pubnub & subscribe
-    pubnub.init({ subscribeKey: environment.pubnub_subscribe_key });
-    pubnub.subscribe({
-      channels: [environment.pubnub_twitter_channel],
-      triggerEvents: ['message'],
-    });
-
-    pubnub.getMessage(environment.pubnub_twitter_channel, (msg) =>
-      this.store.dispatch(fromStore.FetchTweet({ message: msg.message }))
-    );
-
+  constructor(private store: Store<fromStore.IState>) {
     // subscribe to average
     this.perMinute$ = this.store.pipe(
       select(fromStore.SelectAvgTPM, { interval: 60000 }), // per minute (ms)

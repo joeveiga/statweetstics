@@ -1,20 +1,20 @@
 import { TestBed } from '@angular/core/testing';
-import { AppService } from './app.service';
 import { ITweet, ITweetPlace } from '../model';
+import { TweetService } from './tweet.service';
 
-describe('AppService', () => {
-  let sut: AppService;
+describe('TweetService', () => {
+  // let sut: TweetService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    sut = TestBed.inject(AppService);
-  });
+  // beforeEach(() => {
+  //   TestBed.configureTestingModule({});
+  //   sut = TestBed.inject(TweetService);
+  // });
 
-  it('should be created', () => {
-    expect(sut).toBeTruthy();
-  });
+  // it('should be created', () => {
+  //   expect(sut).toBeTruthy();
+  // });
 
-  describe('has_hashtags', () => {
+  describe('hasHashtags', () => {
     let tweetBuilder: TweetBuilder;
 
     beforeEach(() => {
@@ -27,7 +27,7 @@ describe('AppService', () => {
       const htags = ['coronavirus', 'CoViD19'];
 
       // act / assert
-      expect(sut.hasHashtags(tweet, htags)).toBeTrue();
+      expect(TweetService.hasHashtags(tweet, htags)).toBeTrue();
     });
 
     it('false if the tweet does not contain any of the htags', () => {
@@ -36,7 +36,7 @@ describe('AppService', () => {
       const htags = ['coronavirus', 'Pandemic'];
 
       // act / assert
-      expect(sut.hasHashtags(tweet, htags)).toBeFalse();
+      expect(TweetService.hasHashtags(tweet, htags)).toBeFalse();
     });
 
     it('always true if htags filter is empty', () => {
@@ -45,7 +45,7 @@ describe('AppService', () => {
       const htags = [];
 
       // act / assert
-      expect(sut.hasHashtags(tweet, htags)).toBeTrue();
+      expect(TweetService.hasHashtags(tweet, htags)).toBeTrue();
     });
 
     it('performs a case insensitive comparison', () => {
@@ -54,24 +54,24 @@ describe('AppService', () => {
       const htags = ['covid19'];
 
       // act / assert
-      expect(sut.hasHashtags(tweet, htags)).toBeTrue();
+      expect(TweetService.hasHashtags(tweet, htags)).toBeTrue();
     });
   });
 
-  describe('get_avg_tweets', () => {
+  describe('getAvgTweets', () => {
     it('fails if invalid time range', () => {
       // act / assert
-      expect(() => sut.getAvgTweets(2, 1, 0, 1)).toThrow();
+      expect(() => TweetService.getAvgTweets(2, 1, 0, 1)).toThrow();
     });
 
     it('fails if invalid c_tweets', () => {
       // act / assert
-      expect(() => sut.getAvgTweets(1, 2, -1, 1)).toThrow();
+      expect(() => TweetService.getAvgTweets(1, 2, -1, 1)).toThrow();
     });
 
     it('fails if invalid time_interval_ms', () => {
       // act / assert
-      expect(() => sut.getAvgTweets(1, 2, 1, 0)).toThrow();
+      expect(() => TweetService.getAvgTweets(1, 2, 1, 0)).toThrow();
     });
 
     [
@@ -104,17 +104,22 @@ describe('AppService', () => {
         it(`returns correct avg for test case: ${testId}`, () => {
           // act / assert
           expect(
-            sut.getAvgTweets(startMs, endMs, tweetCount, timeIntervalMs)
+            TweetService.getAvgTweets(
+              startMs,
+              endMs,
+              tweetCount,
+              timeIntervalMs
+            )
           ).toBe(expected);
         });
       }
     );
   });
 
-  describe('get_top_countries', () => {
+  describe('getTopCountries', () => {
     it('fails if invalid n', () => {
       // act / assert
-      expect(() => sut.getTopCountries({}, -1)).toThrow();
+      expect(() => TweetService.getTopCountries({}, -1)).toThrow();
     });
 
     it('returns all countries if count less than n', () => {
@@ -123,7 +128,7 @@ describe('AppService', () => {
       const n = 5;
 
       // act
-      const result = sut.getTopCountries(tpc, n);
+      const result = TweetService.getTopCountries(tpc, n);
 
       // assert
       expect(result.length).toBe(2);
@@ -135,7 +140,7 @@ describe('AppService', () => {
       const n = 2;
 
       // act
-      const result = sut.getTopCountries(tpc, n);
+      const result = TweetService.getTopCountries(tpc, n);
 
       // assert
       expect(result.length).toBe(2);
@@ -147,7 +152,7 @@ describe('AppService', () => {
       const n = 2;
 
       // act
-      const result = sut.getTopCountries(tpc, n);
+      const result = TweetService.getTopCountries(tpc, n);
 
       // assert
       expect(result[0].value).toBe(2);
@@ -160,7 +165,7 @@ describe('AppService', () => {
       const n = 2;
 
       // act
-      const result = sut.getTopCountries(tpc, n);
+      const result = TweetService.getTopCountries(tpc, n);
 
       // assert
       expect(result).toContain({ name: 'Japan', value: 2 });

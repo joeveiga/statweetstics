@@ -1,16 +1,23 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import * as countryData from 'country-data';
+import { PubNubAngular } from 'pubnub-angular2';
+import { Subject } from 'rxjs';
+
+import { environment } from 'src/environments/environment';
+
 import { ITweet } from '../model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AppService {
+export class TweetService implements OnDestroy {
+  readonly tweets$: Subject<ITweet>;
+
   /**
    * Checks if the tweet contains at least one of the hashtags in
    * the provided hashtags collection
    */
-  hasHashtags(tweet: ITweet, hashtags: string[]): boolean {
+  static hasHashtags(tweet: ITweet, hashtags: string[]): boolean {
     if (!hashtags.length) {
       return true; // no filter set
     }
@@ -30,7 +37,7 @@ export class AppService {
    * @param tweetCount Total tweets count
    * @param timeIntervalMs Time interval in ms. E.g. 60000 to get 'tweets per minute'
    */
-  getAvgTweets(
+  static getAvgTweets(
     startMs: number,
     endMs: number,
     tweetCount: number,
@@ -57,7 +64,7 @@ export class AppService {
    * @param tpc Collection of tweets per country code
    * @param n Number of top countries to return
    */
-  getTopCountries(
+  static getTopCountries(
     tpc: { [countryCode: string]: number },
     n: number
   ): { name: string; value: number }[] {
@@ -71,5 +78,25 @@ export class AppService {
       name: countryData.countries[c.cc]?.name || c.cc,
       value: c.value,
     }));
+  }
+
+  constructor(private readonly pubnub: PubNubAngular) {
+    this.tweets$ = new Subject();
+
+    // init & subscribe
+    this.pubnub.init({ subscribeKey: environment.pubnub_subscribe_key });
+    this.pubnub.subscribe({
+      channels: [environment.pubnub_twitter_channel],
+      triggerEvents: ['message'],
+    });
+
+    this.pubnub.getMessage(environment.pubnub_twitter_channel, (msg) =>
+      this.tweets$.next(msg.message)
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.tweets$.complete();
+    this.pubnub.unsubscribeAll();
   }
 }

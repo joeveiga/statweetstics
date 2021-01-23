@@ -1,6 +1,6 @@
 import { createSelector } from '@ngrx/store';
+import { TweetService } from '../services/tweet.service';
 import { IState } from './app.reducer';
-import { AppService } from '../services/app.service';
 
 export const SelectApp = (state) => state.app;
 
@@ -10,7 +10,7 @@ export const SelectHashtags = createSelector(
 );
 
 export const SelectAvgTPM = createSelector(SelectApp, (state: IState, props) =>
-  new AppService().getAvgTweets(
+  TweetService.getAvgTweets(
     state.startRecordingMs,
     new Date().getTime(),
     state.tweetCount,
@@ -25,5 +25,5 @@ export const SelectTweetsPerCountry = createSelector(
 
 export const SelectTopCountries = createSelector(
   SelectTweetsPerCountry,
-  (tpc, props) => new AppService().getTopCountries(tpc, props.count)
+  (tpc, props) => TweetService.getTopCountries(tpc, props.count)
 );
