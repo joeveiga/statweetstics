@@ -1,0 +1,45 @@
+<div fxFlex fxLayout="column">
+  <!-- Hashtag filter -->
+  <app-hashtag-filter></app-hashtag-filter>
+  <div fxFlex fxLayout="column" fxLayoutAlign="center">
+    <div
+      fxLayout="column"
+      fxLayout.gt-sm="row"
+      fxLayoutGap="2em"
+      fxLayoutAlign="space-around stretch"
+    >
+      <!-- Tweets per minute -->
+      <mat-card class="tweets-per-minute mat-elevation-z3" fxLayout="column">
+        <mat-card-header>
+          <mat-card-title>Global Tweets</mat-card-title>
+          <mat-card-subtitle>Per minute</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content
+          fxFlex
+          fxLayout="column"
+          fxLayoutAlign="center center"
+        >
+          <h1>{{ perMinute$ | async | number: "1.0-0" }}</h1>
+        </mat-card-content>
+      </mat-card>
+      <!-- Tweets per country -->
+      <mat-card class="tweets-per-country mat-elevation-z3" fxLayout="column">
+        <mat-card-header>
+          <mat-card-title>Tweets Per Country</mat-card-title>
+          <mat-card-subtitle>Top 5</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content fxFlex>
+          <ngx-charts-bar-vertical
+            [results]="perCountry$ | async"
+            [view]="[600, 250]"
+            [animations]="false"
+            [legend]="true"
+            [legendTitle]="''"
+            [showGridLines]="false"
+            [barPadding]="1"
+          ></ngx-charts-bar-vertical>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
