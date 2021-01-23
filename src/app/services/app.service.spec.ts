@@ -197,8 +197,8 @@ class TweetBuilder {
 
   build(): ITweet {
     return {
-      createdAt: this.createdAt,
-      timestampMs: this.timestamp,
+      created_at: this.createdAt,
+      timestamp_ms: this.timestamp,
       place: this.place,
       entities: {
         hashtags: this.htags.map((htag) => ({ text: htag })),

@@ -1,6 +1,6 @@
 export interface ITweet {
-  createdAt: string;
-  timestampMs: number;
+  created_at: string;
+  timestamp_ms: number;
   entities: ITweetEntities;
   place: ITweetPlace;
 }
@@ -14,6 +14,6 @@ export interface ITweetHashtag {
 }
 
 export interface ITweetPlace {
-  countryCode: string;
+  country_code: string;
   country: string;
 }

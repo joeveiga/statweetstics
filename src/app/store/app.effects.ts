@@ -36,7 +36,7 @@ export class AppEffects {
   perCountry$ = createEffect(() =>
     this.actions$.pipe(
       ofType(fromActions.ReceiveTweet),
-      filter((action) => !!action.message.place?.countryCode), // filter out tweets with undefined country
+      filter((action) => !!action.message.place?.country_code), // filter out tweets with undefined country
       map((action) =>
         fromActions.IncrementCountryTweetCount({
           country: action.message.place,

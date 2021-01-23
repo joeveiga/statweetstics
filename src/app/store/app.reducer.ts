@@ -31,8 +31,8 @@ const reducer = createReducer(
     tweetCount: state.tweetCount + 1,
     perCountry: {
       ...state.perCountry,
-      [props.country.countryCode]:
-        (state.perCountry[props.country.countryCode] || 0) + 1,
+      [props.country.country_code]:
+        (state.perCountry[props.country.country_code] || 0) + 1,
     },
   })),
 
